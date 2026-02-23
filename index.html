@@ -8,72 +8,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <style>
-body{
-    font-family: Arial, sans-serif;
-    background:#ffffff;
-}
-.page{
-    width:210mm;
-    min-height:297mm;
-    margin:auto;
-    padding:15px;
-}
-h1{
-    text-align:center;
-    font-size:18px;
-    margin:0;
-}
-.subtitle{
-    text-align:center;
-    font-size:13px;
-}
-.top-block{
-    border:1px solid #000;
-    padding:8px;
-    margin-top:10px;
-    font-size:12px;
-}
-input, select, textarea{
-    border:none;
-    border-bottom:1px solid #000;
-    font-size:11px;
-}
-textarea{
-    width:100%;
-    min-height:80px;
-    font-size:11px;
-    padding:4px;
-    resize:vertical;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:11px;
-    margin-bottom:10px;
-}
-th, td{
-    border:1px solid #000;
-    padding:4px;
-}
+body{font-family: Arial, sans-serif;background:#ffffff;}
+.page{width:210mm;min-height:297mm;margin:auto;padding:15px;}
+h1{text-align:center;font-size:18px;margin:0;}
+.subtitle{text-align:center;font-size:13px;}
+.top-block{border:1px solid #000;padding:8px;margin-top:10px;font-size:12px;}
+input, select, textarea{border:none;border-bottom:1px solid #000;font-size:11px;}
+textarea{width:100%;min-height:80px;font-size:11px;padding:4px;resize:vertical;}
+table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px;}
+th, td{border:1px solid #000;padding:4px;}
 .hidden{ display:none; }
 button{ margin:10px; padding:6px 10px; }
-.mlmc-select{
-    border:1px solid #000;
-    font-size:11px;
-}
-.click-part{
-    background:#eee; border:1px solid #aaa; margin:0 2px;
-    padding:1px 4px; cursor:pointer; display:inline-block; font-size:11px;
-    user-select:none;
-}
-.click-part.selected{
-    background:#999; color:#fff;
-}
-.observation{
-    border:1px solid #000;
-    margin-top:10px;
-    padding:5px;
-}
+.mlmc-select{border:1px solid #000;font-size:11px;}
+.click-part{background:#eee;border:1px solid #aaa;margin:0 2px;padding:1px 4px;cursor:pointer;display:inline-block;font-size:11px;user-select:none;}
+.click-part.selected{background:#999;color:#fff;}
+.observation{border:1px solid #000;margin-top:10px;padding:5px;}
 </style>
 </head>
 <body>
@@ -87,7 +36,7 @@ button{ margin:10px; padding:6px 10px; }
 <button onclick="exportPDF()">Exporter PDF</button>
 </div>
 
-<!-- ================= FEMME ================= -->
+<!-- ================= FEMME (CODE ORIGINE STRICT) ================= -->
 <div id="femme" class="page hidden">
 <h1>GARDE ROBE FEMME</h1>
 <div class="subtitle">Vêtements – Chaussons – Hygiènes<br>Taille du 34 au 80</div>
@@ -139,7 +88,7 @@ Audio <input type="text" style="width:50px;">
 
 <div class="observation">
 <strong>Observation :</strong><br>
-<textarea placeholder="Saisir vos observations ici..."></textarea>
+<textarea></textarea>
 </div>
 </div>
 
@@ -160,6 +109,25 @@ Association <input type="text">
 Tuteur <input type="text"><br><br>
 
 Taille Pantalon <select id="tailleH"></select>
+
+Chemise <select>
+<option></option><option>XS</option><option>S</option><option>M</option>
+<option>L</option><option>XL</option><option>2XL</option>
+<option>3XL</option><option>4XL</option><option>5XL</option><option>6XL</option>
+</select>
+
+Polo <select>
+<option></option><option>XS</option><option>S</option><option>M</option>
+<option>L</option><option>XL</option><option>2XL</option>
+<option>3XL</option><option>4XL</option><option>5XL</option><option>6XL</option>
+</select>
+
+Maillot <select>
+<option></option><option>XS</option><option>S</option><option>M</option>
+<option>L</option><option>XL</option><option>2XL</option>
+<option>3XL</option><option>4XL</option><option>5XL</option><option>6XL</option>
+</select>
+
 Pointure <select id="pointureH"></select>
 Retouche <input type="number" style="width:60px;"><br><br>
 
@@ -174,72 +142,57 @@ Audio <input type="text" style="width:50px;">
 
 <table>
 <tr>
-<th>Collection Homme du 34 au 80</th>
-<th>Qté</th>
-<th>Couleur</th>
-<th>Collection Homme du 34 au 80</th>
-<th>Qté</th>
-<th>Couleur</th>
+<th>Collection Homme du 34 au 80</th><th>Qté</th><th>Couleur</th>
+<th>Collection Homme du 34 au 80</th><th>Qté</th><th>Couleur</th>
 </tr>
 <tbody id="hommeTable"></tbody>
 </table>
 
 <div class="observation">
 <strong>Observation :</strong><br>
-<textarea placeholder="Saisir vos observations ici..."></textarea>
+<textarea></textarea>
 </div>
 </div>
 
 <script>
 function switchPage(v){
-    document.getElementById("femme").classList.add("hidden");
-    document.getElementById("homme").classList.add("hidden");
-    if(v) document.getElementById(v).classList.remove("hidden");
+document.getElementById("femme").classList.add("hidden");
+document.getElementById("homme").classList.add("hidden");
+if(v) document.getElementById(v).classList.remove("hidden");
 }
 
 function createSelectQte(){
-    let s="<select><option></option><option value='0'>✖</option>";
-    for(let i=1;i<=20;i++) s+=`<option>${i}</option>`;
-    s+="</select>";
-    return s;
+let s="<select><option></option><option value='croix'>✖</option>";
+for(let i=1;i<=20;i++) s+=`<option>${i}</option>`;
+s+="</select>";return s;
 }
 
 function formatProductLabel(prod){
-    if(prod.includes("ML") || prod.includes("MC")){
-        return prod.replace(/ML|MC/g,'') + 
-        " <select class='mlmc-select'>" +
-        "<option></option>" +
-        "<option>ML</option>" +
-        "<option>MC</option>" +
-        "</select>";
-    }
-    if(prod.includes("/")){
-        const parts = prod.split("/").map(s=>s.trim());
-        return parts.map(p=>`<span class="click-part" onclick="this.classList.toggle('selected')">${p}</span>`).join(" / ");
-    }
-    return prod;
+if(prod.includes("ML")||prod.includes("MC")){
+return prod.replace(/ML|MC/g,'')+
+" <select class='mlmc-select'><option></option><option>ML</option><option>MC</option></select>";
+}
+if(prod.includes("/")){
+const parts=prod.split("/").map(s=>s.trim());
+return parts.map(p=>`<span class="click-part" onclick="this.classList.toggle('selected')">${p}</span>`).join(" / ");
+}
+return prod;
 }
 
-function fillTable(list, id){
-    let html="";
-    for(let i=0;i<list.length;i+=2){
-        html+="<tr>";
-        html+=`<td>${formatProductLabel(list[i])}</td>
-               <td>${createSelectQte()}</td>
-               <td><input type='text'></td>`;
-        if(list[i+1]){
-            html+=`<td>${formatProductLabel(list[i+1])}</td>
-                   <td>${createSelectQte()}</td>
-                   <td><input type='text'></td>`;
-        } else {
-            html+="<td></td><td></td><td></td>";
-        }
-        html+="</tr>";
-    }
-    document.getElementById(id).innerHTML=html;
+function fillTable(list,id){
+let html="";
+for(let i=0;i<list.length;i+=2){
+html+="<tr>";
+html+=`<td>${formatProductLabel(list[i])}</td><td>${createSelectQte()}</td><td><input type='text'></td>`;
+if(list[i+1]){
+html+=`<td>${formatProductLabel(list[i+1])}</td><td>${createSelectQte()}</td><td><input type='text'></td>`;
+}else{html+="<td></td><td></td><td></td>";}
+html+="</tr>";
+}
+document.getElementById(id).innerHTML=html;
 }
 
-/* ================= LISTE FEMME COMPLETE ================= */
+/* FEMME STRICT ORIGINE */
 fillTable([
 "Robes ML / MC","Chemise de nuit ML / MC",
 "Maillot de corps MC","Robes chasuble",
@@ -269,85 +222,57 @@ fillTable([
 "Bavoir / casaque / Alèse","Serviette de toilette / drap de bain / gant"
 ],"femmeTable");
 
-/* ================= LISTE HOMME COMPLETE ================= */
+/* HOMME avec déplacement à DROITE */
 fillTable([
 "Polo uni ML / MC","La gamme assemblage médicalisée",
 "Polo fantaisie ML / MC","Pantalon + Polo / Pantalon + Chemise",
 "Pull col polo ML / MC","Pyjazip / Ensemble jogging",
 "Pull col rond / Camionneur","La gamme solo médicalisée",
 "Chemise uni ML / MC","Maillot de corps médicalisé ML / MC",
-"Grenouillère de nuit ML / MC","Gilet",
-"Pantalon élastique polyester / Jean / velour","Grenouillère de jour ML / MC",
-"Chemise polaire / jean / Surchemise","Pantalon de jogging élastique",
-"Body short / Body slip","Pantalon Théo braguette et élastique",
-"Bavoir / Casaque","Pantalon braguette Jean/coton/Zippé",
-"Serviette de toilette","Drap de bain",
-"Pantalon confort braguette Jean/Poly","Gant de toilette",
-"Pantalon jean cool braguette","Charentaise",
+"Chemise fantaisie ML / MC","Grenouillère de jour ML / MC",
+"Gilet","Grenouillère de nuit ML / MC",
+"Pantalon élastique polyester / Jean / velour","Pantalon de jogging élastique",
+"Chemise polaire / jean / Surchemise","Pantalon Théo braguette et élastique",
+"Body short / Body slip","Pantalon braguette Jean/coton/Zippé",
+"Bavoir / Casaque","Serviette de toilette",
+"Pantalon confort braguette Jean/Poly","Drap de bain",
+"Pantalon jean cool braguette","Gant de toilette",
 "Blazer/veste/costume","Chausson médicalisée avec velcro",
+"Charentaise","Chausson médicalisé très grande largeur",
 "Charentaise / Mule / Sandale velcro","Blouson/polaire",
-"Parka","Chausson médicalisé très grande largeur",
-"Tee shirt/débardeur","Chaussure cuir",
-"Bermuda coton/Jean","Mocassin lacet / velcro",
-"Ensemble jogging","Crocs",
-"Sweat / veste de jogging","Maillot de corps MC / ML",
-"Marcel","Slip/ caleçon/ boxer/ Caleçon long",
-"Pyjama / Pyjaveste / Pyjashort","Chaussette coton/chaude/tennis",
-"Chaussette tube/socquette/antidérapante",""
+"Parka","Tee shirt/débardeur",
+"Chaussure cuir","Bermuda coton/Jean",
+"Mocassin lacet / velcro","Ensemble jogging",
+"Crocs","Sweat / veste de jogging",
+"Maillot de corps MC / ML","Marcel",
+"Slip/ caleçon/ boxer/ Caleçon long","Pyjama / Pyjaveste / Pyjashort",
+"Chaussette coton/chaude/tennis","Chaussette tube/socquette/antidérapante"
 ],"hommeTable");
 
-/* Tailles */
-for(let i=34;i<=68;i+=2){
-    tailleRPf.innerHTML+=`<option>${i}</option>`;
-    tailleH.innerHTML+=`<option>${i}</option>`;
-}
-for(let i=35;i<=46;i++){
-    pointureF.innerHTML+=`<option>${i}</option>`;
-    pointureH.innerHTML+=`<option>${i}</option>`;
-}
+for(let i=34;i<=68;i+=2){tailleRPf.innerHTML+=`<option>${i}</option>`;tailleH.innerHTML+=`<option>${i}</option>`;}
+for(let i=35;i<=46;i++){pointureF.innerHTML+=`<option>${i}</option>`;pointureH.innerHTML+=`<option>${i}</option>`;}
 
-/* Export PDF avec rendu complet des champs remplis et cases grises */
 async function exportPDF(){
-    const { jsPDF } = window.jspdf;
-    const active = document.querySelector(".page:not(.hidden)");
-    if(!active){ alert("Choisir feuille"); return;}
-
-    // Remplacer temporairement inputs, selects et textareas par spans avec valeurs
-    const fields = [];
-    active.querySelectorAll("input, select, textarea").forEach(el=>{
-        const span = document.createElement("span");
-        if(el.type === "checkbox"){
-            span.textContent = el.checked ? "✔" : "";
-        } else {
-            span.textContent = el.value;
-        }
-        span.style.fontSize = window.getComputedStyle(el).fontSize;
-        span.style.fontFamily = window.getComputedStyle(el).fontFamily;
-        span.style.borderBottom = "none";
-        el.parentNode.insertBefore(span, el);
-        fields.push({el, span});
-        el.style.display = "none";
-    });
-
-    // Appliquer le grisage aux click-part sélectionnées
-    active.querySelectorAll(".click-part").forEach(el=>{
-        el.style.background = el.classList.contains("selected") ? "#999" : "#eee";
-        el.style.color = el.classList.contains("selected") ? "#fff" : "#000";
-    });
-
-    const canvas = await html2canvas(active);
-    const img = canvas.toDataURL("image/png");
-    const pdf = new jsPDF("p","mm","a4");
-    pdf.addImage(img,"PNG",0,0,210,(canvas.height*210)/canvas.width);
-    pdf.save("garde-robe.pdf");
-
-    // Restaurer les champs
-    fields.forEach(f=>{
-        f.el.style.display = "";
-        f.span.remove();
-    });
+const{jsPDF}=window.jspdf;
+const active=document.querySelector(".page:not(.hidden)");
+if(!active){alert("Choisir feuille");return;}
+const fields=[];
+active.querySelectorAll("input,select,textarea").forEach(el=>{
+const span=document.createElement("span");
+if(el.tagName==="SELECT"){span.textContent=el.value==="croix"?"✖":el.value;}
+else if(el.type==="checkbox"){span.textContent=el.checked?"✔":"";}
+else{span.textContent=el.value;}
+el.parentNode.insertBefore(span,el);
+fields.push({el,span});
+el.style.display="none";
+});
+const canvas=await html2canvas(active);
+const img=canvas.toDataURL("image/png");
+const pdf=new jsPDF("p","mm","a4");
+pdf.addImage(img,"PNG",0,0,210,(canvas.height*210)/canvas.width);
+pdf.save("garde-robe.pdf");
+fields.forEach(f=>{f.el.style.display="";f.span.remove();});
 }
 </script>
-
 </body>
 </html>
